@@ -7,7 +7,6 @@ import pkgPokerEnum.*;
 public class Card implements Comparable {
 
 	private eRank eRank;
-	//this is a change
 	private eSuit eSuit;
 	
 	public Card(eRank eRank, eSuit eSuit) {
