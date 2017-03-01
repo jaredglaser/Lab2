@@ -7,6 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 import pkgPokerEnum.eCardNo;
 import pkgPokerEnum.eHandStrength;
+import pkgPokerEnum.eRank;
 
 
 
@@ -101,6 +102,10 @@ public class Hand {
 	//TODO: Implement This Method
 	public static boolean isHandRoyalFlush(Hand h, HandScore hs)
 	{
+		boolean isRoyalFlush = false;
+		if(h.getCardsInHand().get(eCardNo.FirstCard.getCardNo()).geteRank() == eRank.TEN){
+			
+		}
 		return false;
 	}
 	
