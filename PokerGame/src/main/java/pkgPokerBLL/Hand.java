@@ -103,9 +103,21 @@ public class Hand {
 	public static boolean isHandRoyalFlush(Hand h, HandScore hs)
 	{
 		boolean isRoyalFlush = false;
-		if(h.getCardsInHand().get(eCardNo.FirstCard.getCardNo()).geteRank() == eRank.TEN){
-			
+		/*if((h.getCardsInHand().get(eCardNo.FirstCard.getCardNo()).geteRank() == eRank.TEN) && 
+		(h.getCardsInHand().get(eCardNo.SecondCard.getCardNo()).geteRank() == eRank.JACK) &&
+		(h.getCardsInHand().get(eCardNo.ThirdCard.getCardNo()).geteRank() == eRank.QUEEN) &&
+		(h.getCardsInHand().get(eCardNo.FourthCard.getCardNo()).geteRank() == eRank.KING) &&
+		(h.getCardsInHand().get(eCardNo.FirstCard.getCardNo()).geteRank() == eRank.ACE)){
+			return true;	
+		}*/
+		if((h.getCardsInHand().get(eCardNo.FirstCard.getCardNo()).geteRank() == eRank.TEN) && (h.getCardsInHand().get(eCardNo.FirstCard.getCardNo()).geteRank() == eRank.ACE)){
+			for(int i=0;i<h.getCardsInHand().size();i++){
+			if (h.getCardsInHand().get(i) == h.getCardsInHand().get(i+1))
+				return false;
+			}
+			return true;
 		}
+		else
 		return false;
 	}
 	
