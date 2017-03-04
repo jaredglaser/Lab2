@@ -202,8 +202,17 @@ public class Hand {
 	}
 	
 	private boolean isStraight(Hand h){
-		//TODO
-		return false;
+//		//if the first card is not 2-10, then it cannot be a straight.
+//		if(h.getCardsInHand().get(0).geteRank() == eRank.ACE || h.getCardsInHand().get(0).geteRank() == eRank.KING || h.getCardsInHand().get(0).geteRank() == eRank.QUEEN || h.getCardsInHand().get(0).geteRank() == eRank.JACK ){
+//			return false;
+//		}
+		for(int i = 0; i < h.getCardsInHand().size()-1; i++){
+			//if the cards are NOT in order then it is NOT a straight.
+			if(!(h.getCardsInHand().get(i).geteRank().compareTo(h.getCardsInHand().get(i+1).geteRank()) == 1)){
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	private boolean isFlush(Hand h){
