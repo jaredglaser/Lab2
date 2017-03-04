@@ -102,23 +102,22 @@ public class Hand {
 	//TODO: Implement This Method
 	public static boolean isHandRoyalFlush(Hand h, HandScore hs)
 	{
-		boolean isRoyalFlush = false;
-		/*if((h.getCardsInHand().get(eCardNo.FirstCard.getCardNo()).geteRank() == eRank.TEN) && 
-		(h.getCardsInHand().get(eCardNo.SecondCard.getCardNo()).geteRank() == eRank.JACK) &&
-		(h.getCardsInHand().get(eCardNo.ThirdCard.getCardNo()).geteRank() == eRank.QUEEN) &&
-		(h.getCardsInHand().get(eCardNo.FourthCard.getCardNo()).geteRank() == eRank.KING) &&
-		(h.getCardsInHand().get(eCardNo.FirstCard.getCardNo()).geteRank() == eRank.ACE)){
-			return true;	
-		}*/
-		if((h.getCardsInHand().get(eCardNo.FirstCard.getCardNo()).geteRank() == eRank.TEN) && (h.getCardsInHand().get(eCardNo.FirstCard.getCardNo()).geteRank() == eRank.ACE)){
+		boolean isRoyalFlush = true;
+		if((h.getCardsInHand().get(eCardNo.FirstCard.getCardNo()).geteRank() == eRank.TEN) && (h.getCardsInHand().get(eCardNo.FifthCard.getCardNo()).geteRank() == eRank.ACE)){
 			for(int i=0;i<h.getCardsInHand().size();i++){
-			if (h.getCardsInHand().get(i) == h.getCardsInHand().get(i+1))
-				return false;
+				if (h.getCardsInHand().get(i) == h.getCardsInHand().get(i+1)){
+					isRoyalFlush = false;
+					break;
+				}
 			}
-			return true;
 		}
 		else
-		return false;
+			isRoyalFlush = false;
+		hs.setHandStrength(eHandStrength.RoyalFlush);
+		hs.setHiHand(h.getCardsInHand().get(eCardNo.ThirdCard.getCardNo()).geteRank());
+		hs.setLoHand(h.getCardsInHand().get(eCardNo.FirstCard.getCardNo()).geteRank());
+		return isRoyalFlush;
+		
 	}
 	
 	//TODO: Implement This Method
@@ -200,5 +199,20 @@ public class Hand {
 
 		return isFullHouse;
 
+	}
+	
+	private boolean isStraight(Hand h){
+		//TODO
+		return false;
+	}
+	
+	private boolean isFlush(Hand h){
+		for(int i = 0; i < h.getCardsInHand().size()-1; i++){
+			//if the card suits are different OR the card ranks are the same. It is not a flush.
+			if(h.getCardsInHand().get(i).geteSuit() != h.getCardsInHand().get(i+1).geteSuit() || h.getCardsInHand().get(i).geteRank() == h.getCardsInHand().get(i+1).geteRank()){
+				return false;
+			}
+		}
+		return true;
 	}
 }
