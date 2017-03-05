@@ -120,44 +120,101 @@ public class Hand {
 		
 	}
 	
-	//TODO: Implement This Method
+	
 	public static boolean isHandStraightFlush(Hand h, HandScore hs)
 	{
-		return false;
+		return (isFlush(h) && isStraight(h));
 	}	
-	//TODO: Implement This Method
+	
 	public static boolean isHandFourOfAKind(Hand h, HandScore hs)
 	{
+		//counts the number in a row of the same card rank
+		int inRow = 1;
+		//loop through all cards
+		for(int i = 0; i< h.getCardsInHand().size()-1; i++){
+			if(inRow == 4){
+				return true;
+			}
+			//next card does match in rank
+			if( h.getCardsInHand().get(i).geteRank() == h.getCardsInHand().get(i+1).geteRank()){
+				inRow += 1;
+			}
+			//next card does not match in rank
+			else
+				inRow = 1;
+		}
+		//catch if the last card was matching
+		if(inRow == 4){
+			return true;
+		}
+		//there were not four matching rank cards
 		return false;
 	}	
 	
-	//TODO: Implement This Method
 	public static boolean isHandFlush(Hand h, HandScore hs)
 	{
-		return false;
+		return isFlush(h);
 	}		
 	
-	//TODO: Implement This Method
 	public static boolean isHandStraight(Hand h, HandScore hs)
 	{
-		return false;
+		return isStraight(h);
 	}	
 	
-	//TODO: Implement This Method
 	public static boolean isHandThreeOfAKind(Hand h, HandScore hs)
 	{
+		//counts the number in a row of the same card rank
+		int inRow = 1;
+		//loop through all cards
+		for(int i = 0; i< h.getCardsInHand().size()-1; i++){
+			if(inRow == 3){
+				return true;
+			}
+			//next card does match in rank
+			if( h.getCardsInHand().get(i).geteRank() == h.getCardsInHand().get(i+1).geteRank()){
+				inRow += 1;
+			}
+			//next card does not match in rank
+			else
+				inRow = 1;
+		}
+		//catch if the last card was matching
+		if(inRow == 3){
+			return true;
+		}
+		//there were not three matching rank cards
 		return false;
 	}		
 	
-	//TODO: Implement This Method
 	public static boolean isHandTwoPair(Hand h, HandScore hs)
 	{
-		return false;
+		
+		//counts the number of pairs
+		int pairs = 1;
+		//loop through all cards
+		for(int i = 0; i< h.getCardsInHand().size()-1; i++){
+			//next card does match in rank
+			if( h.getCardsInHand().get(i).geteRank() == h.getCardsInHand().get(i+1).geteRank()){
+				pairs += 1;
+			}
+		}
+		if(pairs == 2){
+			return true;
+		}
+		//there were not two pairs
+		else
+			return false;
 	}	
 	
-	//TODO: Implement This Method
 	public static boolean isHandPair(Hand h, HandScore hs)
 	{
+		//loop through all cards
+		for(int i = 0; i< h.getCardsInHand().size()-1; i++){
+			//next card does match in rank
+			if( h.getCardsInHand().get(i).geteRank() == h.getCardsInHand().get(i+1).geteRank()){
+				return true;
+			}
+		}
 		return false;
 	}	
 	
@@ -201,7 +258,7 @@ public class Hand {
 
 	}
 	
-	private boolean isStraight(Hand h){
+	private static boolean isStraight(Hand h){
 //		//if the first card is not 2-10, then it cannot be a straight.
 //		if(h.getCardsInHand().get(0).geteRank() == eRank.ACE || h.getCardsInHand().get(0).geteRank() == eRank.KING || h.getCardsInHand().get(0).geteRank() == eRank.QUEEN || h.getCardsInHand().get(0).geteRank() == eRank.JACK ){
 //			return false;
@@ -215,7 +272,7 @@ public class Hand {
 		return true;
 	}
 	
-	private boolean isFlush(Hand h){
+	private static boolean isFlush(Hand h){
 		for(int i = 0; i < h.getCardsInHand().size()-1; i++){
 			//if the card suits are different OR the card ranks are the same. It is not a flush.
 			if(h.getCardsInHand().get(i).geteSuit() != h.getCardsInHand().get(i+1).geteSuit() || h.getCardsInHand().get(i).geteRank() == h.getCardsInHand().get(i+1).geteRank()){
