@@ -17,12 +17,12 @@ public class Hand {
 	private boolean bIsScored;
 	private HandScore HS;
 	private ArrayList<Card> CardsInHand = new ArrayList<Card>();
-	
+
 	public Hand()
 	{
-		
+
 	}
-	
+
 	public void AddCardToHand(Card c)
 	{
 		CardsInHand.add(c);
@@ -31,25 +31,25 @@ public class Hand {
 	public ArrayList<Card> getCardsInHand() {
 		return CardsInHand;
 	}
-	
+
 	public HandScore getHandScore()
 	{
 		return HS;
 	}
-	
+
 	public Hand EvaluateHand()
 	{
 		Hand h = Hand.EvaluateHand(this);
 		return h;
 	}
-	
+
 	private static Hand EvaluateHand(Hand h)  {
 
 		Collections.sort(h.getCardsInHand());
-		
+
 		//	Another way to sort
 		//	Collections.sort(h.getCardsInHand(), Card.CardRank);
-		
+
 		HandScore hs = new HandScore();
 		try {
 			Class<?> c = Class.forName("pkgPokerBLL.Hand");
@@ -88,44 +88,33 @@ public class Hand {
 		}
 		return h;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	//TODO: Implement This Method
+
+
+
+
+
+
+
+
+
+
+
+
 	public static boolean isHandRoyalFlush(Hand h, HandScore hs)
 	{
-		boolean isRoyalFlush = true;
-		if((h.getCardsInHand().get(eCardNo.FirstCard.getCardNo()).geteRank() == eRank.TEN) && (h.getCardsInHand().get(eCardNo.FifthCard.getCardNo()).geteRank() == eRank.ACE)){
-			for(int i=0;i<h.getCardsInHand().size();i++){
-				if (h.getCardsInHand().get(i) == h.getCardsInHand().get(i+1)){
-					isRoyalFlush = false;
-					break;
-				}
-			}
+		//if it is a flush AND the first card is a ten AND the cards go from ten to ace.
+		if(isFlush(h) && h.getCardsInHand().get(0).geteRank() == eRank.TEN && isStraight(h)){
+			return true;
 		}
-		else
-			isRoyalFlush = false;
-		hs.setHandStrength(eHandStrength.RoyalFlush);
-		hs.setHiHand(h.getCardsInHand().get(eCardNo.ThirdCard.getCardNo()).geteRank());
-		hs.setLoHand(h.getCardsInHand().get(eCardNo.FirstCard.getCardNo()).geteRank());
-		return isRoyalFlush;
-		
+		return false;
 	}
-	
-	
+
+
 	public static boolean isHandStraightFlush(Hand h, HandScore hs)
 	{
 		return (isFlush(h) && isStraight(h));
 	}	
-	
+
 	public static boolean isHandFourOfAKind(Hand h, HandScore hs)
 	{
 		//counts the number in a row of the same card rank
@@ -150,17 +139,17 @@ public class Hand {
 		//there were not four matching rank cards
 		return false;
 	}	
-	
+
 	public static boolean isHandFlush(Hand h, HandScore hs)
 	{
 		return isFlush(h);
 	}		
-	
+
 	public static boolean isHandStraight(Hand h, HandScore hs)
 	{
 		return isStraight(h);
 	}	
-	
+
 	public static boolean isHandThreeOfAKind(Hand h, HandScore hs)
 	{
 		//counts the number in a row of the same card rank
@@ -185,10 +174,10 @@ public class Hand {
 		//there were not three matching rank cards
 		return false;
 	}		
-	
+
 	public static boolean isHandTwoPair(Hand h, HandScore hs)
 	{
-		
+
 		//counts the number of pairs
 		int pairs = 1;
 		//loop through all cards
@@ -205,7 +194,7 @@ public class Hand {
 		else
 			return false;
 	}	
-	
+
 	public static boolean isHandPair(Hand h, HandScore hs)
 	{
 		//loop through all cards
@@ -217,29 +206,49 @@ public class Hand {
 		}
 		return false;
 	}	
-	
+
 	//TODO: Implement This Method
 	public static boolean isHandHighCard(Hand h, HandScore hs)
 	{
 		return false;
 	}	
-	
+
 	//TODO: Implement This Method
 	public static boolean isAcesAndEights(Hand h, HandScore hs)
 	{
-		return false;
+		//counts the number of aces and eights
+		int aces = 0;
+		int eights = 0;
+		//loop through all cards
+		for(int i = 0; i< h.getCardsInHand().size(); i++){
+			//card is ace
+			if(h.getCardsInHand().get(i).geteRank() == eRank.ACE){
+				aces +=1;
+			}
+			//card is eight
+			if(h.getCardsInHand().get(i).geteRank() == eRank.EIGHT){
+				eights +=1;
+			}
+
+		}
+		if(aces == 2 && eights == 2){
+			return true;
+		}
+		//there were not two pairs of aces and eights
+		else
+			return false;
 	}	
-	
-	
+
+
 	public static boolean isHandFullHouse(Hand h, HandScore hs) {
 
 		boolean isFullHouse = false;
-		
+
 		ArrayList<Card> kickers = new ArrayList<Card>();
 		if ((h.getCardsInHand().get(eCardNo.FirstCard.getCardNo()).geteRank() == h.getCardsInHand()
 				.get(eCardNo.ThirdCard.getCardNo()).geteRank())
 				&& (h.getCardsInHand().get(eCardNo.FourthCard.getCardNo()).geteRank() == h.getCardsInHand()
-						.get(eCardNo.FifthCard.getCardNo()).geteRank())) {
+				.get(eCardNo.FifthCard.getCardNo()).geteRank())) {
 			isFullHouse = true;
 			hs.setHandStrength(eHandStrength.FullHouse);
 			hs.setHiHand(h.getCardsInHand().get(eCardNo.FirstCard.getCardNo()).geteRank());
@@ -247,7 +256,7 @@ public class Hand {
 		} else if ((h.getCardsInHand().get(eCardNo.FirstCard.getCardNo()).geteRank() == h.getCardsInHand()
 				.get(eCardNo.SecondCard.getCardNo()).geteRank())
 				&& (h.getCardsInHand().get(eCardNo.ThirdCard.getCardNo()).geteRank() == h.getCardsInHand()
-						.get(eCardNo.FifthCard.getCardNo()).geteRank())) {
+				.get(eCardNo.FifthCard.getCardNo()).geteRank())) {
 			isFullHouse = true;
 			hs.setHandStrength(eHandStrength.FullHouse);
 			hs.setHiHand(h.getCardsInHand().get(eCardNo.ThirdCard.getCardNo()).geteRank());
@@ -257,12 +266,12 @@ public class Hand {
 		return isFullHouse;
 
 	}
-	
+
 	private static boolean isStraight(Hand h){
-//		//if the first card is not 2-10, then it cannot be a straight.
-//		if(h.getCardsInHand().get(0).geteRank() == eRank.ACE || h.getCardsInHand().get(0).geteRank() == eRank.KING || h.getCardsInHand().get(0).geteRank() == eRank.QUEEN || h.getCardsInHand().get(0).geteRank() == eRank.JACK ){
-//			return false;
-//		}
+		//		//if the first card is not 2-10, then it cannot be a straight.
+		//		if(h.getCardsInHand().get(0).geteRank() == eRank.ACE || h.getCardsInHand().get(0).geteRank() == eRank.KING || h.getCardsInHand().get(0).geteRank() == eRank.QUEEN || h.getCardsInHand().get(0).geteRank() == eRank.JACK ){
+		//			return false;
+		//		}
 		for(int i = 0; i < h.getCardsInHand().size()-1; i++){
 			//if the cards are NOT in order then it is NOT a straight.
 			if(!(h.getCardsInHand().get(i).geteRank().compareTo(h.getCardsInHand().get(i+1).geteRank()) == 1)){
@@ -271,7 +280,7 @@ public class Hand {
 		}
 		return true;
 	}
-	
+
 	private static boolean isFlush(Hand h){
 		for(int i = 0; i < h.getCardsInHand().size()-1; i++){
 			//if the card suits are different OR the card ranks are the same. It is not a flush.
