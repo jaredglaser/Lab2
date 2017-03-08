@@ -46,6 +46,7 @@ public class Hand {
 	private static Hand EvaluateHand(Hand h)  {
 
 		Collections.sort(h.getCardsInHand());
+		
 
 		//	Another way to sort
 		//	Collections.sort(h.getCardsInHand(), Card.CardRank);
@@ -152,6 +153,7 @@ public class Hand {
 
 	public static boolean isHandThreeOfAKind(Hand h, HandScore hs)
 	{
+		
 		//counts the number in a row of the same card rank
 		int inRow = 1;
 		//loop through all cards
@@ -216,6 +218,9 @@ public class Hand {
 	//TODO: Implement This Method
 	public static boolean isAcesAndEights(Hand h, HandScore hs)
 	{
+		ArrayList<Card> kickers = new ArrayList<Card>();
+		ArrayList<eCardNo> positions = new ArrayList<eCardNo>();
+		
 		//counts the number of aces and eights
 		int aces = 0;
 		int eights = 0;
@@ -223,15 +228,18 @@ public class Hand {
 		for(int i = 0; i< h.getCardsInHand().size(); i++){
 			//card is ace
 			if(h.getCardsInHand().get(i).geteRank() == eRank.ACE){
+				
 				aces +=1;
 			}
 			//card is eight
 			if(h.getCardsInHand().get(i).geteRank() == eRank.EIGHT){
+				
 				eights +=1;
 			}
 
 		}
 		if(aces == 2 && eights == 2){
+			
 			return true;
 		}
 		//there were not two pairs of aces and eights

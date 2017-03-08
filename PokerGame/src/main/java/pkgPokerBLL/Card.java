@@ -28,6 +28,23 @@ public class Card implements Comparable {
 
 	}
 	
+	public static eCardNo convertToECardNum(int i){
+		switch(i){
+		case(1):
+			return eCardNo.FirstCard;
+		case(2):
+			return eCardNo.SecondCard;
+		case(3):
+			return eCardNo.ThirdCard;
+		case(4):
+			return eCardNo.FourthCard;
+		case(5):
+			return eCardNo.FifthCard;
+		default:
+			return null;
+		}
+	}
+	
 	public static Comparator<Card> CardRank = new Comparator<Card>() {
 
 		public int compare(Card c1, Card c2) {
