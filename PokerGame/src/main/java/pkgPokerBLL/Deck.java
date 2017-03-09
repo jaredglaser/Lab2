@@ -1,9 +1,11 @@
 package pkgPokerBLL;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.UUID;
 
 import pkgPokerEnum.eRank;
+import pkgPokerEnum.eSuit;
 
 public class Deck {
 
@@ -11,19 +13,29 @@ public class Deck {
 	private ArrayList<Card> DeckCards = new ArrayList<Card>();
 	
 	public Deck()
-	{
-		//TODO: Implement This Constructor (no-arg Deck should build up a deck with 52 cards)
-		
-		//	This method will do a for/each, returning each rank in the enum.
-		for (eRank Rank : eRank.values()) {
-			System.out.println(Rank.getiRankNbr());
-		}
-	}
-	
-	public Card DrawCard()
-	{
-		//	TODO: Implement this method... should draw a card from the deck.
-		
-		return null;
-	}
+    {
+        for (eSuit Suit : eSuit.values())
+        {
+            for (eRank Rank : eRank.values()) {
+            Card car = new Card(Rank,Suit);
+            DeckCards.add(car);
+        }
+        }
+        Collections.shuffle(DeckCards);
+    }
+   
+    public Card DrawCard()
+    {
+    	if(CardsToDraw() > 0){ //if there are cards left, draw one.
+    		return DeckCards.remove(0);
+    	}  
+    	return null; //TODO: Add an exception to handle this. ie: no cards left exception.
+    }
+    
+    public int CardsToDraw(){
+    	int numCards =  DeckCards.size()-1;
+    	System.out.println("There are " + numCards + " Cards Left in the Deck.");
+    	return numCards;
+    }
 }
+

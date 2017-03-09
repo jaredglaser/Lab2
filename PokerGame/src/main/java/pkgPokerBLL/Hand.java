@@ -46,7 +46,7 @@ public class Hand {
 	private static Hand EvaluateHand(Hand h)  {
 
 		Collections.sort(h.getCardsInHand());
-		
+
 
 		//	Another way to sort
 		//	Collections.sort(h.getCardsInHand(), Card.CardRank);
@@ -90,21 +90,11 @@ public class Hand {
 		return h;
 	}
 
-
-
-
-
-
-
-
-
-
-
-
 	public static boolean isHandRoyalFlush(Hand h, HandScore hs)
 	{
 		//if it is a flush AND the first card is a ten AND the cards go from ten to ace.
-		if(isFlush(h) && h.getCardsInHand().get(0).geteRank() == eRank.TEN && isStraight(h)){
+		if(isFlush(h) && h.getCardsInHand().get(0).geteRank() == eRank.ACE && isStraight(h)){
+			hs.setHandStrength(eHandStrength.RoyalFlush);
 			return true;
 		}
 		return false;
@@ -113,7 +103,15 @@ public class Hand {
 
 	public static boolean isHandStraightFlush(Hand h, HandScore hs)
 	{
-		return (isFlush(h) && isStraight(h));
+		if((isFlush(h) && isStraight(h))){
+
+			hs.setHandStrength(eHandStrength.StraightFlush);
+			hs.setHiHand(h.getCardsInHand().get(0).geteRank());
+			//hs.setLoHand(h.getCardsInHand().get(1).geteRank()); I do not think there is a lo hand.
+
+			return true;
+		}
+		return false;
 	}	
 
 	public static boolean isHandFourOfAKind(Hand h, HandScore hs)
@@ -121,20 +119,33 @@ public class Hand {
 		//counts the number in a row of the same card rank
 		int inRow = 1;
 		//loop through all cards
+		int position = 0;
+		int badposition = -1;
 		for(int i = 0; i< h.getCardsInHand().size()-1; i++){
-			if(inRow == 4){
-				return true;
-			}
+
 			//next card does match in rank
 			if( h.getCardsInHand().get(i).geteRank() == h.getCardsInHand().get(i+1).geteRank()){
+				position = i;
 				inRow += 1;
 			}
+
 			//next card does not match in rank
 			else
 				inRow = 1;
+			badposition = i;
 		}
-		//catch if the last card was matching
+		//there are four in a row
 		if(inRow == 4){
+			ArrayList<Card> kickers = new ArrayList<Card>();
+
+			hs.setHandStrength(eHandStrength.FourOfAKind);
+			hs.setHiHand(h.getCardsInHand().get(position).geteRank());
+			if(badposition != -1){
+				kickers.add(h.getCardsInHand().get(h.getCardsInHand().size()-1));
+			}
+			else
+				kickers.add(h.getCardsInHand().get(badposition));
+			hs.setKickers(kickers);
 			return true;
 		}
 		//there were not four matching rank cards
@@ -143,34 +154,70 @@ public class Hand {
 
 	public static boolean isHandFlush(Hand h, HandScore hs)
 	{
-		return isFlush(h);
+		if(isFlush(h)){
+			ArrayList<Card> kickers = new ArrayList<Card>();
+			kickers.add(h.getCardsInHand().get(1));
+			kickers.add(h.getCardsInHand().get(2));
+			kickers.add(h.getCardsInHand().get(3));
+			kickers.add(h.getCardsInHand().get(4));
+
+			hs.setHandStrength(eHandStrength.Flush);
+			hs.setHiHand(h.getCardsInHand().get(0).geteRank());
+			hs.setKickers(kickers);
+			return true;
+		}
+		return false;
 	}		
 
 	public static boolean isHandStraight(Hand h, HandScore hs)
 	{
-		return isStraight(h);
+		if(isStraight(h)){
+
+			hs.setHandStrength(eHandStrength.Straight);
+			hs.setHiHand(h.getCardsInHand().get(0).geteRank());
+
+			return true;
+		}
+		return false;
 	}	
 
 	public static boolean isHandThreeOfAKind(Hand h, HandScore hs)
 	{
-		
+		ArrayList<Card> high = new ArrayList<Card>();
+		ArrayList<Card> kickers = new ArrayList<Card>();
+
+		boolean isthree = false;
 		//counts the number in a row of the same card rank
 		int inRow = 1;
+		int loc = -1;
 		//loop through all cards
 		for(int i = 0; i< h.getCardsInHand().size()-1; i++){
 			if(inRow == 3){
-				return true;
+				isthree = true;
 			}
 			//next card does match in rank
-			if( h.getCardsInHand().get(i).geteRank() == h.getCardsInHand().get(i+1).geteRank()){
+			else if( h.getCardsInHand().get(i).geteRank() == h.getCardsInHand().get(i+1).geteRank()){
+				high.add(h.getCardsInHand().get(i));
 				inRow += 1;
+				loc = i;
 			}
 			//next card does not match in rank
-			else
+			else{
+				kickers.add(h.getCardsInHand().get(i));
 				inRow = 1;
+			}
 		}
 		//catch if the last card was matching
 		if(inRow == 3){
+
+			high.add(h.getCardsInHand().get(4));
+
+			if(kickers.size() == 1){//if there was 1 kicker.
+				kickers.add(h.getCardsInHand().get(h.getCardsInHand().size()-1));//must have been the last card that wasn't checked.
+			}
+			hs.setHandStrength(eHandStrength.ThreeOfAKind);
+			hs.setHiHand(h.getCardsInHand().get(loc).geteRank());
+			hs.setKickers(kickers);
 			return true;
 		}
 		//there were not three matching rank cards
@@ -179,17 +226,30 @@ public class Hand {
 
 	public static boolean isHandTwoPair(Hand h, HandScore hs)
 	{
-
+		ArrayList<Card> kickers = new ArrayList<Card>();
+		ArrayList<Integer> pairloc = new ArrayList<Integer>();
 		//counts the number of pairs
-		int pairs = 1;
+		int pairs = 0;
 		//loop through all cards
 		for(int i = 0; i< h.getCardsInHand().size()-1; i++){
 			//next card does match in rank
 			if( h.getCardsInHand().get(i).geteRank() == h.getCardsInHand().get(i+1).geteRank()){
 				pairs += 1;
+				pairloc.add(i);
+				i++;
 			}
+			else
+				kickers.add(h.getCardsInHand().get(i));
 		}
 		if(pairs == 2){
+
+			hs.setHandStrength(eHandStrength.TwoPair);
+			hs.setHiHand(h.getCardsInHand().get(pairloc.get(0)).geteRank());//the first card of the pairs is the highest
+			hs.setLoHand(h.getCardsInHand().get(pairloc.get(1)).geteRank());//the third card of the pairs is the lowest
+			if(kickers.size() == 0){ //if there aren't any kickers
+				kickers.add(h.getCardsInHand().get(h.getCardsInHand().size()-1)); //must have been the last card that wasn't checked
+			}
+			hs.setKickers(kickers);
 			return true;
 		}
 		//there were not two pairs
@@ -199,12 +259,29 @@ public class Hand {
 
 	public static boolean isHandPair(Hand h, HandScore hs)
 	{
+		ArrayList<Card> kickers = new ArrayList<Card>();
+		ArrayList<Integer> pairloc = new ArrayList<Integer>();
+		boolean pair = false;
 		//loop through all cards
 		for(int i = 0; i< h.getCardsInHand().size()-1; i++){
 			//next card does match in rank
 			if( h.getCardsInHand().get(i).geteRank() == h.getCardsInHand().get(i+1).geteRank()){
-				return true;
+				pairloc.add(i);
+				pair = true;
 			}
+			else{
+				kickers.add(h.getCardsInHand().get(i));
+			}
+		}
+		if(pair){
+			hs.setHandStrength(eHandStrength.Pair);
+			hs.setHiHand(h.getCardsInHand().get(pairloc.get(0)).geteRank());
+			hs.setLoHand(null);
+			if(kickers.size() == 2){ //if there are 2 kickers, then the last card is a kicker and wasn't part of a pair
+				kickers.add(h.getCardsInHand().get(h.getCardsInHand().size()-1));
+			}
+			hs.setKickers(kickers);
+			return true;
 		}
 		return false;
 	}	
@@ -212,15 +289,27 @@ public class Hand {
 	//TODO: Implement This Method
 	public static boolean isHandHighCard(Hand h, HandScore hs)
 	{
-		return false;
+		// sets the HandStrength as HighCard and finds the highCard and the SecondHighest card and
+		// sets them as the HighHand and LowHand respectively 
+
+		ArrayList<Card> kickers = new ArrayList<Card>();
+		kickers.add(h.getCardsInHand().get(2));
+		kickers.add(h.getCardsInHand().get(3));
+		kickers.add(h.getCardsInHand().get(4));
+		hs.setKickers(kickers);
+
+		hs.setHandStrength(eHandStrength.HighCard);
+		hs.setHiHand(h.getCardsInHand().get(0).geteRank());
+		hs.setLoHand(h.getCardsInHand().get(1).geteRank());
+
+		return true;
 	}	
 
 	//TODO: Implement This Method
 	public static boolean isAcesAndEights(Hand h, HandScore hs)
 	{
 		ArrayList<Card> kickers = new ArrayList<Card>();
-		ArrayList<eCardNo> positions = new ArrayList<eCardNo>();
-		
+
 		//counts the number of aces and eights
 		int aces = 0;
 		int eights = 0;
@@ -228,18 +317,23 @@ public class Hand {
 		for(int i = 0; i< h.getCardsInHand().size(); i++){
 			//card is ace
 			if(h.getCardsInHand().get(i).geteRank() == eRank.ACE){
-				
+
 				aces +=1;
 			}
 			//card is eight
-			if(h.getCardsInHand().get(i).geteRank() == eRank.EIGHT){
-				
+			else if(h.getCardsInHand().get(i).geteRank() == eRank.EIGHT){
+
 				eights +=1;
 			}
+			else
+				kickers.add(h.getCardsInHand().get(i));
 
 		}
 		if(aces == 2 && eights == 2){
-			
+			hs.setHandStrength(eHandStrength.AcesEights);
+			hs.setHiHand(null);
+			hs.setLoHand(null);
+			hs.setKickers(kickers);
 			return true;
 		}
 		//there were not two pairs of aces and eights
