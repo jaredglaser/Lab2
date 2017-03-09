@@ -286,7 +286,7 @@ public class Hand {
 		return false;
 	}	
 
-	//TODO: Implement This Method
+
 	public static boolean isHandHighCard(Hand h, HandScore hs)
 	{
 		// sets the HandStrength as HighCard and finds the highCard and the SecondHighest card and
@@ -305,7 +305,7 @@ public class Hand {
 		return true;
 	}	
 
-	//TODO: Implement This Method
+
 	public static boolean isAcesAndEights(Hand h, HandScore hs)
 	{
 		ArrayList<Card> kickers = new ArrayList<Card>();
